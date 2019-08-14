@@ -4,4 +4,4 @@ data = read.csv("train.csv")
 data
 
 # Exploración rápida del dataset usando un resumen
-View(data)
+summary(data)
