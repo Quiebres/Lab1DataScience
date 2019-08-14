@@ -1,5 +1,7 @@
 # Leyendo el dataset de csv
-train <- read.csv('train.csv')
+setwd('/Users/odalisrg/Documents/Data Science/Lab1DataScience')
+data = read.csv("train.csv")
+data
 
 # Exploración rápida del dataset usando un resumen
-summary(train)
+View(data)
