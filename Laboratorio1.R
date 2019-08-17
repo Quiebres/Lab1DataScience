@@ -22,6 +22,9 @@ trainCuan <- train[,c(4,5,18,19,20,21,27,35,37,38,39,44,45,46,47,48,49,50,51,52,
 trainCual <- train[,-c(4,5,18,19,20,21,27,35,37,38,39,44,45,46,47,48,49,50,51,52,53,55,57,60,62,63,67,68,69,70,71,72,76,77,78,81)]
 
 
+
+
+
 # --- Elaboración de la matriz de correlación --- 
 
 # Se usa la función cor la cual calcula la correlación de variables numéricas
@@ -34,7 +37,10 @@ corrplot(mcorrelacion, type="lower")
 
 
 
+
+
 # ---------- Clustering -----------
+
 # Elimina los NAs de las variables cuantitativas
 trainCuan <- na.omit(trainCuan)
 
@@ -44,21 +50,20 @@ for (i in 2:10)
   ward[i] <- sum(kmeans(trainCuan[,1:36], centers=i)$withinss)
 
 # Se grafica el resultado para visualizar mejor
-plot(1:10, ward, type="b", xlab="Numero de clusters",  ylab="Within groups sum of squares")
+plot(1:10, ward, type="b", xlab="Numero de clusters",  ylab="Grupos suma de cuadrados")
 
 # Agrupamiento por medio de las k-medias
 numericas <- trainCuan
-todoNumericas <- trainCuan[complete.cases(trainCuan),]
-km <- kmeans(trainCuan[,1:36],3)
-numericas$grupo <- km$cluster
+km <- kmeans(trainCuan[,1:36],3) # Se calculan 3 clusters
+numericas$grupo <- km$cluster # Se crea una nueva columna con el numero de cluster
 
-# 
+# Se grafican los 3 grupos de cluster
 fviz_cluster(km, data = trainCuan[,1:36],geom = "point", ellipse.type = "norm")
 
 # Método de la silueta
 silcluster <- silhouette(km$cluster,dist(trainCuan[,1:36]))
 mean(silcluster[,3]) 
-# Da como resultado 0.5325 
+# Da como resultado 0.5616
 
 # Grafica el numero optimo de clusters
 fviz_nbclust(scale(numericas), kmeans, method = "silhouette", k.max = 10) + theme_minimal() + ggtitle("The Silhouette Plot")
