@@ -1,7 +1,10 @@
-# Paquetes a usar
-require(ggpubr)
-require(tidyverse)
-require(corrplot)
+require(ggpubr) # Para mejorar la visualización gráfica
+require(tidyverse) # Para explotar, manipular y visualizar datos que comparten info
+require(corrplot) # Para visualizar la matriz de correlación
+require(cluster) #Para calcular la silueta
+library(fpc) #para hacer el plotcluster
+library(NbClust) #Para determinar el numero de clusters optimo
+library(factoextra) #Para hacer graficos bonitos de clustering
 
 # Leyendo el dataset de csv
 train <- read.csv("train.csv", TRUE, ",")
@@ -11,7 +14,7 @@ class(train)
 # ------------ Laboratorio 1 ---------------
 
 # Exploración rápida del dataset usando un resumen
-# summary(train$HouseStyle)
+summary(train)
 
 # Se separan las variables cuantitativas del dataset train
 trainCuan <- train[,c(4,5,18,19,20,21,27,35,37,38,39,44,45,46,47,48,49,50,51,52,53,55,57,60,62,63,67,68,69,70,71,72,76,77,78,81)]
@@ -28,3 +31,34 @@ mcorrelacion <- round(cor(trainCuan,use="complete.obs"),3)
 # Se visualiza la matriz de correlación de forma gráfica
 corrplot(mcorrelacion, type="upper")
 corrplot(mcorrelacion, type="lower")
+
+
+
+# ---------- Clustering -----------
+# Elimina los NAs de las variables cuantitativas
+trainCuan <- na.omit(trainCuan)
+
+# Se calcula la cantidad de clusters necesarios según el método de Ward
+ward <- (nrow(trainCuan[,1:36])-1)*sum(apply(trainCuan[,1:36],2,var))
+for (i in 2:10) 
+  ward[i] <- sum(kmeans(trainCuan[,1:36], centers=i)$withinss)
+
+# Se grafica el resultado para visualizar mejor
+plot(1:10, ward, type="b", xlab="Numero de clusters",  ylab="Within groups sum of squares")
+
+# Agrupamiento por medio de las k-medias
+numericas <- trainCuan
+todoNumericas <- trainCuan[complete.cases(trainCuan),]
+km <- kmeans(trainCuan[,1:36],3)
+numericas$grupo <- km$cluster
+
+# 
+fviz_cluster(km, data = trainCuan[,1:36],geom = "point", ellipse.type = "norm")
+
+# Método de la silueta
+silcluster <- silhouette(km$cluster,dist(trainCuan[,1:36]))
+mean(silcluster[,3]) 
+# Da como resultado 0.5325 
+
+# Grafica el numero optimo de clusters
+fviz_nbclust(scale(numericas), kmeans, method = "silhouette", k.max = 10) + theme_minimal() + ggtitle("The Silhouette Plot")
