@@ -10,6 +10,8 @@ install.packages("factoextra")
 install.packages("REdaS")
 install.packages("arules")
 
+
+
 require(ggpubr) # Para mejorar la visualización gráfica
 require(tidyverse) # Para explotar, manipular y visualizar datos que comparten info
 require(corrplot) # Para visualizar la matriz de correlación
@@ -100,10 +102,9 @@ summary(pcaTrainCuan)
 
 
 # -------------- Apriori ------------------
-reglas<-apriori(trainCual[,3:45], parameter = list(support = 0.05,
-                                        confidence = 0.99,
+reglas<-apriori(trainCual[,3:45], parameter = list(support = 0.50,
+                                        confidence = 0.60,
                                         target = "rules"))
-
 
 # rulesAP <- apriori(trainCuan, parameter = list(support = 0.5, condifence = 0.8, maxlen = 10, maxtime=5, target = "rules"))
 
