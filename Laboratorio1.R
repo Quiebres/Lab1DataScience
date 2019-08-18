@@ -9,6 +9,9 @@ install.packages("NbClust")
 install.packages("factoextra")
 install.packages("REdaS")
 install.packages("arules")
+install.packages("ggplot2")
+install.packages("ggpubr")
+install.packages("ggmap")
 
 
 
@@ -24,7 +27,9 @@ library(psych) # Para poder utilizar KMO()
 library(FactoMineR)
 library(corrplot)
 library(REdaS)
-
+library(ggplot2) # Graficas bonitas
+library(ggpubr) # Graficas bonitas x2
+library(ggmap)
 library(arules) # Reglas de asociacion
 
 
@@ -57,6 +62,39 @@ corre <- cor(trainCuan)
 # Se visualiza la matriz de correlación de forma gráfica
 corrplot(mcorrelacion, type="upper")
 corrplot(mcorrelacion, type="lower")
+
+
+
+
+# ----------- Graficas cuantitativas -------------
+# Histograma para el precio de ventas
+hist(train$SalePrice, main = "Histograma del precio de ventas", xlab = "Precios de venta")
+# Grafica de dispersion para observar la relacion de dos variables
+plot(x = train$SalePrice, y = train$GrLivArea, main = "Relacion del precio con el área de la casa", 
+     xlab = "Precio de venta", 
+     ylab = "Åra habitable de la casa")
+# Siagrama de cajas y bigotes para observar el año de construccion
+boxplot(train$YearBuilt, main = "Diagrama de caja y bigotes para el año de construcción",
+        ylab="Año de construcción")
+# Histograma de los meses de venta
+hist(train$MoSold, main = "Cantidad de ventas en los 12 meses", 
+     xlab = "Meses")
+
+
+
+# ----------- Graficas cuanlitativas -------------
+# Barras para las zonas de venta
+plot(x = train$MSZoning, main = "Clasificación general de las zonas de venta",
+     xlab = "Zonas")
+# Grafica de pie
+x <-  c(95, 1365)
+labels <-  c("Sí", "No")
+piepercent<- round(100*x/sum(x), 1) # Porcentaje
+# Pie chart
+pie(x, labels = piepercent, main = "Proporcion de casas con aire acondicionado",
+    col = rainbow(length(x)))
+legend("topright", c("Sí","No"), cex = 0.8,
+       fill = rainbow(length(x)))
 
 
 
