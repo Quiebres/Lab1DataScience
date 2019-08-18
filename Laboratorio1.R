@@ -8,6 +8,8 @@ install.packages("fpc")
 install.packages("NbClust")
 install.packages("factoextra")
 install.packages("REdaS")
+install.packages("arules")
+
 require(ggpubr) # Para mejorar la visualización gráfica
 require(tidyverse) # Para explotar, manipular y visualizar datos que comparten info
 require(corrplot) # Para visualizar la matriz de correlación
@@ -20,6 +22,9 @@ library(psych) #Para poder utilizar KMO()
 library(FactoMineR)
 library(corrplot)
 library(REdaS)
+library(arules) # Reglas de asociacion
+
+
 # Leyendo el dataset de csv
 train <- read.csv("train.csv", TRUE, ",")
 # Volviendo el csv en un data frame
@@ -83,7 +88,6 @@ mean(silcluster[,3])
 fviz_nbclust(scale(numericas), kmeans, method = "silhouette", k.max = 10) + theme_minimal() + ggtitle("The Silhouette Plot")
 
 
-
 # ---------- PCA -----------
 KMO(corre) #Mala adecuacion muestral
 bartlett.test(trainCuan) # valor p aproximadamente 0, por lo tanto hay suficiente info para rechazar Ho
@@ -92,4 +96,13 @@ summary(pcaTrainCuan)
 bart_spher(mcorrelacion)
 
 # No es posible realizar un PCA para el dataset
+
+
+# -------------- Apriori ------------------
+reglas<-apriori(trainCual[,3:45], parameter = list(support = 0.05,
+                                        confidence = 0.99,
+                                        target = "rules"))
+
+
+# rulesAP <- apriori(trainCuan, parameter = list(support = 0.5, condifence = 0.8, maxlen = 10, maxtime=5, target = "rules"))
 
