@@ -14,15 +14,17 @@ require(ggpubr) # Para mejorar la visualización gráfica
 require(tidyverse) # Para explotar, manipular y visualizar datos que comparten info
 require(corrplot) # Para visualizar la matriz de correlación
 require(cluster) #Para calcular la silueta
-library(fpc) #para hacer el plotcluster
-library(NbClust) #Para determinar el numero de clusters optimo
-library(factoextra) #Para hacer graficos bonitos de clustering
-library(rela) #Para poder utilizar paf()
-library(psych) #Para poder utilizar KMO()
+library(fpc) # Para hacer el plotcluster
+library(NbClust) # Para determinar el numero de clusters optimo
+library(factoextra) # Para hacer graficos bonitos de clustering
+library(rela) # Para poder utilizar paf()
+library(psych) # Para poder utilizar KMO()
 library(FactoMineR)
 library(corrplot)
 library(REdaS)
+
 library(arules) # Reglas de asociacion
+
 
 
 # Leyendo el dataset de csv
@@ -89,13 +91,12 @@ fviz_nbclust(scale(numericas), kmeans, method = "silhouette", k.max = 10) + them
 
 
 # ---------- PCA -----------
+
 KMO(corre) #Mala adecuacion muestral
-bartlett.test(trainCuan) # valor p aproximadamente 0, por lo tanto hay suficiente info para rechazar Ho
+bart_spher(mcorrelacion) # valor p aproximadamente 0. Se rechaza Ho. Se realiza el PCA.
 pcaTrainCuan <- PCA(trainCuan)
 summary(pcaTrainCuan)
-bart_spher(mcorrelacion)
 
-# No es posible realizar un PCA para el dataset
 
 
 # -------------- Apriori ------------------
